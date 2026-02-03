@@ -1,0 +1,90 @@
+_target_: workspace.rewind_ws.ReWiNDWorkspace
+
+cfg:
+  general:
+    # dataset specific
+    project_name: "reward_rewind"
+    task_name: "fold_tshirt"
+    repo_id: PATH_TO_YOUR/LEROBOT_DATASET    # path to the huggingface lerobot dataset: USR_NAME/DATASET
+    state_norm_path: PATH_TO_YOUR/NORM_STATS # path to the task specific norm stats file, example can be found at "assets/fold_tshirt.json"
+    camera_names:  [top_camera-images-rgb]
+    seed: 42
+    device: "cuda"
+
+  dataloader:
+    batch_size: 32
+    num_workers: 6
+    shuffle: True
+    pin_memory: True
+    persistent_workers: True
+
+  val_dataloader:
+    batch_size: 32
+    num_workers: 6
+    shuffle: False
+    pin_memory: True
+    persistent_workers: True
+
+  rollout_dataloader:
+    batch_size: 1
+    num_workers: 6
+    shuffle: True
+    pin_memory: True
+    persistent_workers: True
+
+  encoders:               
+    # CLIP
+    vision_ckpt: "openai/clip-vit-base-patch32"
+    text_ckpt: "openai/clip-vit-base-patch32"
+
+  model:
+    d_model: 768
+    n_layers: 8
+    n_heads: 12
+    dropout: 0.1
+    n_obs_steps: 8
+    max_rewind_steps: 4
+    frame_gap: 30
+    state_dim: 14
+    no_state: False
+    resume_training: False
+    model_path: ""
+
+    # Sparse anno
+    num_classes: 6 # num_classes = num_stage
+    annotation_list: [
+            "grab crumpled tshirt from pile", 
+            "move the tshirt to center",
+            "Flatten the tshirt out",
+            "Fold the tshirt",
+            "Neatly place the folded tshirt to the corner",
+    ]
+
+  optim:
+    lr: 5e-5
+    weight_decay: 5.0e-3
+    betas: [0.9, 0.95]
+    eps: 1.0e-8
+    warmup_steps: 1000
+    total_steps: 100_000
+
+  train:
+    num_epochs: 2
+    grad_clip: 1.0
+    log_every: 50        # steps
+    eval_every: 1        # epochs
+    save_every: 5_000    # steps
+    val_portion: 0.1     # fraction of episodes for validation
+
+  eval:
+    eval_frame_gap: 10
+
+    ckpt_path: "PATH/TO/YOUR/CHECKPOINT"  # path to the folder containing reward_best.pt
+    reward_model_name: "NAME_OF_REWARD_MODEL"  # name of the reward model, e.g. reward_best.pt
+
+    run_times: 60  
+    
+    # Raw data evaluation
+    raw_data_dir: "PATH/TO/YOUR/RAW/DATA"  # path to the folder containing raw robot trajectories for evaluation
+    raw_data_run_times: 60
+    

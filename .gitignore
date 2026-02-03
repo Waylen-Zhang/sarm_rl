@@ -1,0 +1,4 @@
+transformed_datasets/
+opensarm/outputs/
+opensarm/wandb/
+*.pyc
