@@ -92,7 +92,7 @@ cfg:
     # Evaluation type
     model_type: "dense"       # "sparse" or "dense"
     dataset_type: "dense"    # "sparse" or "dense"
-    run_times: 60             # number of episodes to evaluate in dataset
+    run_times: 20             # number of episodes to evaluate in dataset
 
     # Raw data evaluation
     raw_data_dir: "/home/dx/waylen/SARM/raw_data/insert_wire"  # path to the folder containing raw robot trajectories for evaluation

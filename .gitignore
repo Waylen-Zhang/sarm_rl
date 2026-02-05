@@ -2,3 +2,6 @@ transformed_datasets/
 opensarm/outputs/
 opensarm/wandb/
 *.pyc
+ros2_ws/build/
+ros2_ws/install/
+ros2_ws/log/

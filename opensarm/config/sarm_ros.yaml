@@ -1,0 +1,71 @@
+# ===============================
+# SARM ROS Deployment Config
+# ===============================
+
+_target_: workspace.stage_srv_ws.SARMWorkspace
+
+cfg:
+  # ---------- General ----------
+  general:
+    project_name: "reward_sarm"
+    task_name: "insert_wire"
+
+    camera_names:
+      - "observation.images.primary"
+      - "observation.images.wrist"
+
+    seed: 42
+    device: "cuda"
+
+    # norm stats（推理必须）
+    state_norm_path: "/home/dx/waylen/SARM/transformed_datasets/insert_wire_dense/meta/sarm_stats.json"
+
+
+  # ---------- Encoders ----------
+  encoders:
+    vision_ckpt: "openai/clip-vit-base-patch32"
+    text_ckpt: "openai/clip-vit-base-patch32"
+
+
+  # ---------- Model ----------
+  model:
+    d_model: 768
+    n_layers: 8
+    n_heads: 12
+    dropout: 0.1
+
+    n_obs_steps: 8
+    max_rewind_steps: 4
+    frame_gap: 30
+
+    state_dim: 7
+    no_state: false
+
+    # ---- Stage labels (must match training) ----
+    num_classes_dense: 3
+    dense_annotation_list:
+      - "approach and pick up the wire"
+      - "insert wire into motherboard"
+      - "finish inserting wire into motherboard"
+
+    num_classes_sparse: 2 # num_classes = num_stage
+    sparse_annotation_list: [
+            "pick up and insert wire into motherboard", 
+            "finish inserting wire into motherboard"
+    ]
+
+  # ---------- Evaluation / Inference ----------
+  eval:
+    ckpt_path: "/home/dx/waylen/SARM/opensarm/outputs/2026-02-03/12-53-40/reward_sarm/insert_wire/checkpoints"
+
+    stage_model: "stage_best.pt"
+    subtask_model: "subtask_best.pt"
+
+    model_type: "dense"
+    dataset_type: "dense"
+
+
+  # ---------- ROS ----------
+  ros:
+    node_name: "sarm_stage_server"
+    service_name: "/sarm/stage_inference"

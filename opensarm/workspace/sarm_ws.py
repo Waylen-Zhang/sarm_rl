@@ -576,6 +576,8 @@ class SARMWorkspace:
 
                 if cfg.model.no_state:
                     state = torch.zeros_like(state, device=self.device)
+
+                print(img_emb.shape, lang_emb.shape, state.shape)
                 
                 stage_prob = stage_model(img_emb, lang_emb, state, lens, scheme=model_type).softmax(dim=-1)  # (B, T, num_classes)
                 stage_idx = stage_prob.argmax(dim=-1)  # (B, T)

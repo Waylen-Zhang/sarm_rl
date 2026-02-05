@@ -1,0 +1,5 @@
+sensor_msgs/Image image_primary
+sensor_msgs/Image image_wrist
+float32[] state
+---
+int32 stage
