@@ -4,24 +4,24 @@ cfg:
   general:
     # dataset specific
     project_name: "reward_sarm"
-    task_name: "insert_wire"
-    repo_id_sparse: "/home/dx/waylen/SARM/transformed_datasets/insert_wire_sparse"  # path to the huggingface lerobot dataset: USR_NAME/DATASET
-    repo_id_dense: "/home/dx/waylen/SARM/transformed_datasets/insert_wire_dense"    # path to the huggingface lerobot dataset: USR_NAME/DATASET
-    state_norm_path: "/home/dx/waylen/SARM/transformed_datasets/insert_wire_dense/meta/sarm_stats.json" # path to the task specific norm stats file, example can be found at "assets/fold_tshirt.json"
+    task_name: "pick_cube_sim"
+    repo_id_sparse: "/home/dx/waylen/SARM/transformed_datasets/pick_cube_sim_sparse"  # path to the huggingface lerobot dataset: USR_NAME/DATASET
+    repo_id_dense: "/home/dx/waylen/SARM/transformed_datasets/pick_cube_sim_dense"    # path to the huggingface lerobot dataset: USR_NAME/DATASET
+    state_norm_path: "/home/dx/waylen/SARM/transformed_datasets/pick_cube_sim_sparse/meta/sarm_stats.json" # path to the task specific norm stats file, example can be found at "assets/fold_tshirt.json"
     camera_names:  ["observation.images.primary", "observation.images.wrist"]
     seed: 42
     device: "cuda" 
 
   dataloader:
     batch_size: 32
-    num_workers: 6
+    num_workers: 16
     shuffle: True
     pin_memory: True
     persistent_workers: True
 
   val_dataloader:
-    batch_size: 16
-    num_workers: 6
+    batch_size: 32
+    num_workers: 32
     shuffle: False
     pin_memory: True
     persistent_workers: True
@@ -45,7 +45,7 @@ cfg:
     dropout: 0.1
     n_obs_steps: 8
     max_rewind_steps: 4
-    frame_gap: 30
+    frame_gap: 10
     state_dim: 7
     no_state: False
     resume_training: False
@@ -54,16 +54,16 @@ cfg:
     # Sparse anno
     num_classes_sparse: 2 # num_classes = num_stage
     sparse_annotation_list: [
-            "pick up and insert wire into motherboard", 
-            "finish inserting wire into motherboard"
+            "approach to the cube", 
+            "align with the cube and pick it up"
     ]
 
     # Dense anno
     num_classes_dense: 3 # num_classes = num_stage
     dense_annotation_list: [
-        "approach and pick up the wire",
-        "insert wire into motherboard",
-        "finish inserting wire into motherboard"
+            "approach to the cube", 
+            "align with the cube",
+            "pick it up"
     ]
 
   optim:
@@ -79,13 +79,13 @@ cfg:
     grad_clip: 1.0
     log_every: 50          # steps
     eval_every: 50          # epochs
-    save_every: 5_000      # steps
+    save_every: 1_000      # steps
     val_portion: 0.1       # fraction of episodes for validation
 
   eval:
     eval_frame_gap: 1
 
-    ckpt_path: "/home/dx/waylen/SARM/opensarm/outputs/2026-02-03/12-53-40/reward_sarm/insert_wire/checkpoints"    # path to the folder containing reward_best.pt
+    ckpt_path: "/home/dx/waylen/SARM/opensarm/outputs/2026-02-05/19-11-57/reward_sarm/pick_cube_sim/checkpoints"    # path to the folder containing reward_best.pt
     stage_model: "stage_best.pt"      # name of the stage model, e.g. stage_best.pt
     subtask_model: "subtask_best.pt"  # name of the subtask model, e.g. subtask_best.pt
 

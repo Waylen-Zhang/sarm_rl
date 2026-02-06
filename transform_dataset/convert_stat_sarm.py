@@ -6,7 +6,7 @@ import numpy as np
 
 # ================= 配置 =================
 # 你的数据集路径
-DATASET_DIR = "/home/dx/waylen/SARM/transformed_datasets/insert_wire_dense"
+DATASET_DIR = "/home/dx/waylen/SARM/transformed_datasets/pick_cube_sim_dense"
 # 输出文件名
 OUTPUT_FILENAME = "sarm_stats.json"
 

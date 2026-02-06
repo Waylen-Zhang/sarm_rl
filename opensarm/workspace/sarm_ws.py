@@ -577,12 +577,12 @@ class SARMWorkspace:
                 if cfg.model.no_state:
                     state = torch.zeros_like(state, device=self.device)
 
-                print(img_emb.shape, lang_emb.shape, state.shape)
+                # print(img_emb.shape, lang_emb.shape, state.shape)
                 
                 stage_prob = stage_model(img_emb, lang_emb, state, lens, scheme=model_type).softmax(dim=-1)  # (B, T, num_classes)
                 stage_idx = stage_prob.argmax(dim=-1)  # (B, T)
                 stage_conf = stage_prob.gather(-1, stage_idx.unsqueeze(-1)).squeeze(-1)  # (B, T)
-                
+                print(f"stage_idx: {stage_idx}")
                 # Inject stage prior to subtask model
                 stage_onehot = F.one_hot(stage_idx, num_classes=stage_prob.size(-1)).float()  # (B, T, C)
                 stage_emb = stage_onehot.unsqueeze(1)                          # (B, 1, T, C)
@@ -739,7 +739,7 @@ class SARMWorkspace:
                     imgs = batch["image_frames"][key].flatten(0, 1).to(self.device) # (B*T, C, H, W)
                     img_list.append(imgs)
                 
-                lang_strs = ["fold the tshirt"]
+                lang_strs = ["pick cube sim"]
                 lens = torch.tensor([1+cfg.model.n_obs_steps], dtype=torch.int32, device=self.device)
                 state = batch["state"].to(self.device)
                 state = state_normalizer.normalize(state)

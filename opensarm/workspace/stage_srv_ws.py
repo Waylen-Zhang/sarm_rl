@@ -190,6 +190,7 @@ class SARMWorkspace:
         """
 
         # ---- image encoding ----
+        # print(img_primary, img_wrist)
         img_list = [img_primary, img_wrist]
         imgs_all = torch.cat(img_list, dim=0)     # (2, 3, H, W)
 
@@ -205,7 +206,7 @@ class SARMWorkspace:
 
         # ---- text encoding ----
         lang_emb = self.clip_encoder.encode_text(
-            ["insert wire into motherboard"]
+            ["pick cube sim"]
         )
         if hasattr(lang_emb, "pooler_output"):
             lang_emb = lang_emb.pooler_output
@@ -237,9 +238,7 @@ class SARMWorkspace:
             lens,
             scheme=self.cfg.eval.model_type
         ).softmax(dim=-1)
-
         stage_idx = stage_prob.argmax(dim=-1)
-
         return int(int(stage_idx[0, -1].item()))
 
     # ========================================================

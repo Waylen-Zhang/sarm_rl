@@ -7,8 +7,8 @@ _target_: workspace.stage_srv_ws.SARMWorkspace
 cfg:
   # ---------- General ----------
   general:
-    project_name: "reward_sarm"
-    task_name: "insert_wire"
+    project_name: "pick_cube_sim"
+    task_name: "pick_cube_sim"
 
     camera_names:
       - "observation.images.primary"
@@ -18,7 +18,7 @@ cfg:
     device: "cuda"
 
     # norm stats（推理必须）
-    state_norm_path: "/home/dx/waylen/SARM/transformed_datasets/insert_wire_dense/meta/sarm_stats.json"
+    state_norm_path: "/home/dx/waylen/SARM/transformed_datasets/pick_cube_sim_sparse/meta/sarm_stats.json"
 
 
   # ---------- Encoders ----------
@@ -36,30 +36,30 @@ cfg:
 
     n_obs_steps: 8
     max_rewind_steps: 4
-    frame_gap: 30
+    frame_gap: 1
 
     state_dim: 7
     no_state: false
 
-    # ---- Stage labels (must match training) ----
-    num_classes_dense: 3
-    dense_annotation_list:
-      - "approach and pick up the wire"
-      - "insert wire into motherboard"
-      - "finish inserting wire into motherboard"
-
     num_classes_sparse: 2 # num_classes = num_stage
     sparse_annotation_list: [
-            "pick up and insert wire into motherboard", 
-            "finish inserting wire into motherboard"
+            "approach to the cube", 
+            "align with the cube and pick it up"
+    ]
+
+    # Dense anno
+    num_classes_dense: 3 # num_classes = num_stage
+    dense_annotation_list: [
+            "approach to the cube", 
+            "align with the cube",
+            "pick it up"
     ]
 
   # ---------- Evaluation / Inference ----------
   eval:
-    ckpt_path: "/home/dx/waylen/SARM/opensarm/outputs/2026-02-03/12-53-40/reward_sarm/insert_wire/checkpoints"
-
-    stage_model: "stage_best.pt"
-    subtask_model: "subtask_best.pt"
+    ckpt_path: "/home/dx/waylen/SARM/opensarm/outputs/2026-02-05/19-11-57/reward_sarm/pick_cube_sim/checkpoints"
+    stage_model: "stage_step_004000_loss_0.000.pt"
+    subtask_model: "subtask_step_004000_loss_0.047.pt"
 
     model_type: "dense"
     dataset_type: "dense"

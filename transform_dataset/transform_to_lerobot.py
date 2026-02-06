@@ -6,6 +6,7 @@ from tqdm import tqdm
 import sys
 import os
 import cv2
+import time
 
 def resize_img(img, size=(256, 256)):
     # img: HWC numpy
@@ -25,11 +26,11 @@ except ImportError as e:
 # ==============================================================
 
 # ================= 配置区域 =================
-INPUT_PKL_PATH = "/home/dx/waylen/conrft/examples/experiment_bak/insert_success/demo_data/flexiv_assembly_24_demos_2026-01-30_15-11-53.pkl"
-OUTPUT_DATASET_ROOT = "/home/dx/waylen/SARM/transformed_datasets/insert_wire_test1"
-DATASET_NAME = "insert_wire_test1"
+INPUT_PKL_PATH = "/home/dx/waylen/conrft/examples/experiments/pick_cube_sim/demo_data/pick_cube_sim_20_demos_2026-02-05_13-55-18.pkl"
+OUTPUT_DATASET_ROOT = "/home/dx/waylen/SARM/transformed_datasets/pick_cube_sim_dense"
+DATASET_NAME = "pick_cube_sim"
 
-TASK_DESCRIPTION = "Insert the network cable into the motherboard."
+TASK_DESCRIPTION = "Pick up the cube and lift it."
 
 KEY_MAPPING = {
     "wrist_1": "observation.images.primary",
@@ -38,7 +39,7 @@ KEY_MAPPING = {
 }
 
 FPS = 10
-NUM_STAGES = 2  # 【设置】总阶段数。例如2阶段，意味着中间需要按1次空格进行分割
+NUM_STAGES = 3  # 【设置】总阶段数。例如2阶段，意味着中间需要按1次空格进行分割
 # ===========================================
 
 def flatten_state(state_dict: dict) -> np.ndarray:
@@ -121,6 +122,7 @@ def get_episode_split_points(episode, ep_idx, total_eps):
             info_text = f"Frame: {idx}/{len(frames_list)} | Splits: {len(split_indices)}/{needed_splits}"
             cv2.putText(frame, info_text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
             cv2.putText(frame, "Space: Split | R: Retry", (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 255), 1)
+            time.sleep(0.01)
             
             cv2.imshow(window_name, frame)
             
